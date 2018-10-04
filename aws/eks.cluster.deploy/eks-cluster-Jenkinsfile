@@ -1,0 +1,119 @@
+pipeline {
+
+  agent {
+    node {
+    label 'linux'
+    }
+  }
+  parameters {
+        choice(name: 'TERRAFORM_COMMAND', choices: 'Create\nDestroy\nConfigure', description: 'Specify whether Terraform should create, destroy, or configure the EKS cluster.')
+        string(name: 'PROJECT', defaultValue: 'default', description: 'Choose the project name for the deployment.')
+        choice(name: 'PHASE', choices: 'dev\nprod', description: 'Specify development phase.')
+        choice(name: 'FACTORY', choices: 'oec\nrd', description: 'Specify the Demo Factory (DF).')
+        choice(name: 'VISIBILITY', choices: 'private\npublic', description: 'Choose the visibility for someone outside of Halliburton.')
+    }
+     environment {
+        TF_STATE_ENV          = "${params.PROJECT}-${params.FACTORY}-${params.PHASE}-${params.VISIBILITY}"
+        IS_JENKINS_MODE         = "true"
+        TF_VAR_project          = "${params.PROJECT}"
+        TF_VAR_factory            = "${params.FACTORY}"
+        TF_VAR_phase            = "${params.PHASE}"
+        AWS_TIMEOUT_SECONDS         = 600
+    }
+
+    options {
+        ansiColor('xterm')
+    }
+        stages {
+
+     stage('Validation') {
+            steps {
+                // Clean up Jenkins workspace
+                sh "git clean -fdx"
+            }
+        }
+       stage('Create EKS Cluster with dependencies') {
+            when { expression { params.TERRAFORM_COMMAND == 'Create' } }
+            steps {
+              dir('eks-deployment/eks-cluster-deployment'){
+                withEnv(["PATH+TF=${tool 'terraform-0.11.8'}"]) {
+                      sh 'if [ -e terraform.tfstate ] ; then rm terraform.tfstate; fi'
+                      sh 'echo "Starting EKS creation"'
+                      sh "terraform init -reconfigure -backend-config=\"workspace_key_prefix=${TF_STATE_ENV}\""
+                      sh 'terraform workspace list'
+                      sh "[ \$(terraform workspace list | grep -cw ${TF_STATE_ENV}) -lt 1 ] && terraform workspace new ${TF_STATE_ENV} || echo found Terraform environment ${TF_STATE_ENV}"
+                      sh 'terraform workspace select ${TF_STATE_ENV}'
+                      sh 'terraform show'
+                      sh "terraform plan -var datestamp=\$(date +%Y%m%d%H%M)"
+                      sh "terraform apply -auto-approve -var datestamp=\$(date +%Y%m%d%H%M) "
+                      sh 'ls -l'
+                }
+            }
+          }
+        }
+       stage('Destroy EKS Cluster') {
+            when { expression { params.TERRAFORM_COMMAND == 'Destroy' } }
+            steps {
+                dir('eks-deployment/eks-cluster-deployment'){
+                withEnv(["PATH+TF=${tool 'terraform-0.11.8'}"]) {
+                      sh "terraform init -reconfigure -backend-config=\"workspace_key_prefix=${TF_STATE_ENV}\""
+                      sh "terraform workspace list"
+                      sh "terraform workspace select ${TF_STATE_ENV} || terraform workspace new ${TF_STATE_ENV}"
+                      sh 'terraform show'
+                      sh "terraform plan --destroy -var datestamp=\$(date +%Y%m%d%H%M)"
+                      sh "terraform destroy -force -var datestamp=\$(date +%Y%m%d%H%M)"
+                      sh "terraform workspace select default"
+                      sh "terraform workspace delete ${TF_STATE_ENV}"
+                }
+            }
+        } 
+      }
+        stage('Configure EKS Cluster') {
+            when { expression { params.TERRAFORM_COMMAND == 'Configure' } }
+            steps {
+                withCredentials([[$class: 'UsernamePasswordMultiBinding', credentialsId: 'repo.openearth.io-dswc-ci',
+                          usernameVariable: 'USERNAME', passwordVariable: 'PASSWORD']]) {
+                sh '''
+                    #!/bin/bash
+
+                    ekscluster="dwponica-oec-dev-eks"
+                    dockerrepo="dswc-docker.repo.openearth.community"
+                    dockeremail="email"
+                    eksregion="us-east-1"
+
+                    aws-iam-authenticator init -i $ekscluster
+                    aws eks update-kubeconfig --name $ekscluster --r $eksregion
+
+                    docker login -u $USERNAME -p $PASSWORD dswc-docker.repo.openearth.community
+                    kubectl create secret docker-registry regcred --docker-server=$dockerrepo --docker-username=$USERNAME --docker-password=$PASSWORD --docker-email=$dockeremail || true                 
+                    
+                    cd
+                    
+                    echo '
+apiVersion: v1
+kind: ConfigMap
+metadata:
+ name: aws-auth
+ namespace: kube-system
+data:
+ mapRoles: |
+  - rolearn: arn:aws:iam::801842999866:role/dwponica-oec-dev-node-role2
+  username: system:node:{{EC2PrivateDNSName}}
+   groups:
+   - system:bootstrappers
+   - system:nodes' > aws-auth-cm.yaml
+                    
+                    kubectl apply -f aws-auth-cm.yaml
+
+                    curl https://raw.githubusercontent.com/kubernetes/helm/master/scripts/get | bash 
+                    kubectl --namespace kube-system create serviceaccount tiller || true
+                    kubectl create clusterrolebinding tiller --clusterrole cluster-admin --serviceaccount=kube-system:tiller || true
+                    helm init --service-account tiller || true
+                    helm init --upgrade --service-account tiller || true
+                    kubectl patch deployment tiller-deploy --namespace=kube-system --type=json --patch='[{"op": "add", "path": "/spec/template/spec/containers/0/command", "value": ["/tiller", "--listen=localhost:44134"]}]' || true
+                '''
+                }
+            }
+        }
+    }
+}

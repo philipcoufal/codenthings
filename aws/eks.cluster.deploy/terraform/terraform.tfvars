@@ -1,0 +1,68 @@
+################################ VPC ###############################
+eks_vpc="vpc-d9f9d6bf"
+eks_subnet_01="subnet-98d3d4c3"
+eks_subnet_02="subnet-0afffbe9361b15350"
+region="us-east-1"
+availability_zones=["us-east-1c"]
+subnets_ids=["subnet-98d3d4c3","subnet-cdd4d396","subnet-62f9f14f"]
+public_subnet_ids=["subnet-cdd4d396","subnet-62f9f14f"]
+############################ eksCluster ############################
+eks_cluster="dwponica-oec-dev-eks"
+eks_key_pair_name="sami-onica-df18"
+eks_public_sg="sg-0aa835342bcead97e"
+max_instance_size="4"
+min_instance_size="2"
+desired_capacity="2"
+health_check_type="ELB"
+image_id="ami-d781d4a8"
+volume_type="standard"
+volume_size="100"
+instance_type="t2.xlarge"
+delete_on_termination="true"
+ec2_tag="eks-cluster-instance"
+security_groups_ids=["1","2"]
+############################# Service ##############################
+app_name="wellplan-ex"
+eks_load_balancer="eks-load-balancer"
+database_endpoint="1"
+database_name="1"
+database_password="1"
+database_username="1"
+production_database_password="1"
+production_database_username="1"
+production_secret_key_base="1"
+secret_key_base="1"
+desired_count="2"
+container_port="80"
+container_name="wellplan-ex"
+########################## Task Definition #########################
+eks_td_family="wellplan-ex-td"
+########################### Service Role ###########################
+eks_service_role="dwponica-oec-dev-eks-role"
+eks_sr_path="/"
+eks_sr_policy_name="eks_policy"
+eks_sr_policy_path="/"
+eks_sr_description="eks service policy"
+eks_node_role="dwponica-oec-dev-node-role2"
+############################# eks ALB ##############################
+eks_target_group="eks-target-group"
+eks_alb_port="80"
+eks_alb_protocol="HTTP"
+eks_alb_healthy_threshold="5"
+eks_alb_unhealthy_threshold="2"
+eks_alb_interval="30"
+eks_alb_matcher="200"
+eks_alb_path="/"
+eks_alb_port_mode="traffic-port"
+eks_alb_protocol_hc="HTTP"
+eks_alb_timeout="5"
+eks_alb_listener_port="80"
+eks_alb_listener_protocol="HTTP"
+eks_alb_listener_type="forward"
+########################## eks ASG #################################
+max_capacity="4"
+min_capacity="1"
+scalable_dimension="eks:service:DesiredCount"
+service_namespace="eks"
+####################### ECR Repository #############################
+repository_name="testrepo"

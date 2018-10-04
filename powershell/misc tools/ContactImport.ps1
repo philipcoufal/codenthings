@@ -1,0 +1,1 @@
+Import-Csv .\ContactImportList.csv | foreach { New-MailContact -Name $_.displayname -FirstName $_.firstname -LastName $_.lastname -ExternalEmailAddress $_.email -OrganizationalUnit "OU=TMP,DC=corp,DC=kmtc,DC=prv" }

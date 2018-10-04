@@ -1,0 +1,277 @@
+{
+    "models": [
+		{
+            "name": "SG - A&G UK ALM",
+            "stime": "06/30/2016 09:40:29",
+            "etime": "06/30/2016 09:42:59",
+            "dir": "D:\\PVCS\\Scripts_copy from here\\Scripts\\PerfLogs"
+        }
+		],
+    "servers": [
+        {
+            "name": "EMEACHETPPWA09",
+            "desc": "Master Server - 2 Cores",
+            "type": "worker",
+            "cpus": 2,
+            "ram": 4000
+        },
+		{
+            "name": "EMEACHETPPWR09",
+            "desc": "Worker Server - 2 Cores",
+            "type": "worker",
+            "cpus": 2,
+            "ram": 4000
+        },
+        {
+            "name": "EMEACHETALLFS01",
+            "desc": "File Server",
+            "type": "file",
+            "cpus": 2,
+            "ram": 6000
+        }
+    ],
+    "counters": [
+        {
+            "name": "Processor(_Total)\\% Processor Time",
+            "tol": {
+                "worker": "baseline",
+                "app": "80",
+                "file": "80",
+                "hpc": "80",
+                "opr": "<",
+                "txt": " for non-workers",
+                "desc": "< 80% for non-workers"
+            }
+        },
+        {
+            "name": "Processor(_Total)\\% User Time",
+            "tol": {
+                "worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+                "hpc": "baseline",
+                "desc": "baseline"
+            }
+        },
+        {
+            "name": "Processor(_Total)\\Interrupts/sec",
+            "tol": {
+                "worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+                "hpc": "baseline",
+                "desc": "baseline"
+            }
+        },
+        {
+            "name": "Processor(_Total)\\% Privileged Time",
+            "tol": {
+                "worker": "30",
+                "app": "30",
+                "file": "30",
+                "hpc": "30",
+                "opr": "<",
+                "desc": "< 30%"
+            }
+        },
+        {
+            "name": "System\\Processor Queue Length",
+            "tol": {
+                "worker": "10",
+                "app": "10",
+                "file": "10",
+                "hpc": "10",
+                "opr": "<",
+                "txt": " per CPU",
+                "desc": "< 10 per CPU"
+            }
+        },
+        {
+            "name": "System\\Context Switches/sec",
+            "tol": {
+                "worker": "5000",
+                "app": "5000",
+                "file": "5000",
+                "hpc": "5000",
+                "opr": "<",
+                "txt": " per CPU",
+                "desc": "< 5000 per CPU"
+            }
+        },
+        {
+            "name": "Memory\\Available MBytes",
+            "tol": {
+                "worker": "400",
+                "app": "200",
+                "file": "600",
+                "hpc": "400",
+                "opr": ">",
+                "desc": "> 10% of installed RAM"
+            }
+        },
+        {
+            "name": "Memory\\Pages/sec",
+            "tol": {
+                "worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+                "hpc": "baseline",
+                "desc": "baseline"
+            }
+        },
+        {
+            "name": "Memory\\Page Faults/sec",
+            "tol": {
+                "worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+                "hpc": "baseline",
+                "desc": "baseline"
+            }
+        },
+        {
+            "name": "Memory\\Transition Faults/sec",
+            "tol": {
+                "worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+                "hpc": "baseline",
+                "desc": "baseline"
+            }
+        },
+        {
+            "name": "PhysicalDisk(*)\\% Idle Time",
+            "tol": {
+                "worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+                "hpc": "baseline",
+                "desc": "baseline"
+            }
+        },
+        {
+            "name": "PhysicalDisk(*)\\Disk Reads/sec",
+            "tol": {
+                "worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+                "hpc": "baseline",
+                "desc": "baseline"
+            }
+        },
+        {
+            "name": "PhysicalDisk(*)\\Disk Writes/sec",
+            "tol": {
+                "worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+                "hpc": "baseline",
+                "desc": "baseline"
+            }
+        },
+		{
+            "name": "PhysicalDisk(*)\\Disk Read Bytes/sec",
+            "tol": {
+				"worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+				"hpc": "baseline",
+				"desc": "baseline"
+            }
+        },
+		{
+            "name": "PhysicalDisk(*)\\Disk Write Bytes/sec",
+            "tol": {
+				"worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+				"hpc": "baseline",
+				"desc": "baseline"
+            }
+        },
+        {
+            "name": "PhysicalDisk(*)\\Split IO/Sec",
+            "tol": {
+                "worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+                "hpc": "baseline",
+                "desc": "baseline"
+            }
+        },
+        {
+            "name": "PhysicalDisk(*)\\Avg. Disk Queue Length",
+            "tol": {
+                "worker": "500",
+                "app": "500",
+                "file": "500",
+                "hpc": "500",
+                "opr": "<",
+                "desc": "< 1 per disk"
+            }
+        },
+        {
+            "name": "PhysicalDisk(*)\\Avg. Disk sec/Read",
+            "tol": {
+                "worker": ".050",
+                "app": ".050",
+                "file": ".050",
+                "hpc": ".050",
+                "opr": "<",
+                "desc": "< 50 ms"
+            }
+        },
+        {
+            "name": "PhysicalDisk(*)\\Avg. Disk sec/Write",
+            "tol": {
+                "worker": ".075",
+                "app": ".075",
+                "file": ".075",
+                "hpc": ".075",
+                "opr": "<",
+                "desc": "< 75 ms"
+            }
+        },
+        {
+            "name": "Network Interface(*)\\Bytes Received/sec",
+            "tol": {
+                "worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+                "hpc": "baseline",
+                "desc": "baseline"
+            }
+        },
+        {
+            "name": "Network Interface(*)\\Bytes Sent/sec",
+            "tol": {
+                "worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+                "hpc": "baseline",
+                "desc": "baseline"
+            }
+        },
+		{
+            "name": "Network Interface(*)\\Bytes Total/sec",
+            "tol": {
+                "worker": "baseline",
+                "app": "baseline",
+                "file": "baseline",
+                "hpc": "baseline",
+                "desc": "baseline"
+            }
+        },
+        {
+            "name": "Network Interface(*)\\Output Queue Length",
+            "tol": {
+                "worker": "1",
+                "app": "1",
+                "file": "1",
+                "hpc": "1",
+                "opr": "<",
+                "desc": "< 1"
+            }
+        }
+    ]
+}
