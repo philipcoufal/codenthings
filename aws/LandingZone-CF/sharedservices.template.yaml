@@ -1,5 +1,5 @@
 Description:
-  Test VPCs and required dependencies for Hal's landing zone
+  Test shared-services VPC and required dependencies for Hal's landing zone
 
 Parameters:
   EnvironmentName:
