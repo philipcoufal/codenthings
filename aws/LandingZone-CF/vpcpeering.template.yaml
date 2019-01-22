@@ -1,0 +1,12 @@
+Description:
+  VPC Peering connection between workload and sharedservices
+
+Type: AWS::EC2::VPCPeeringConnection
+Properties:
+  PeerVpcId: String
+  Tags:
+    - Resource Tag
+  VpcId: String
+  PeerOwnerId: String
+  PeerRegion: String
+  PeerRoleArn:  String
