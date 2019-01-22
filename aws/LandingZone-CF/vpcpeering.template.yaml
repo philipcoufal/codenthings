@@ -1,5 +1,5 @@
 Description:
-  VPC Peering connection between workload and sharedservices
+  Test VPC Peering connection between workload and sharedservices
 
 Type: AWS::EC2::VPCPeeringConnection
 Properties:
