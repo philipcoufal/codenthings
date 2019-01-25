@@ -201,6 +201,39 @@ Resources:
       GroupDescription: "Security group with no ingress rule"
       VpcId: !Ref VPC
 
+  InstanceSecurityGroup:
+    Type: AWS::EC2::SecurityGroup
+    Properties:
+      GroupDescription: Allow HTTP and SSH traffic to our host
+      VpcId:
+        Ref: VPC
+      SecurityGroupIngress:
+      - IpProtocol: tcp
+        FromPort: '22'
+        ToPort: '22'
+        CidrIp: 0.0.0.0/0
+      - IpProtocol: tcp
+        FromPort: '80'
+        ToPort: '80'
+        CidrIp: 0.0.0.0/0
+      SecurityGroupEgress:
+      - IpProtocol: tcp
+        FromPort: '1'
+        ToPort: '65535'
+        CidrIp: 0.0.0.0/0
+
+  MyEC2Instance:
+    Type: AWS::EC2::Instance
+    Properties:
+      ImageId: ami-04328208f4f0cf1fe
+      KeyName:
+        Ref: SSHKeyName
+      SubnetId:
+        Ref: PublicSubnet1
+      InstanceType: t2.micro
+      SecurityGroupIds:
+      - Ref: InstanceSecurityGroup
+
 Outputs:
   VPC:
     Description: A reference to the created VPC
