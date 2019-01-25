@@ -1,12 +1,30 @@
 Description:
   Test VPC Peering connection between workload and sharedservices
 
-Type: AWS::EC2::VPCPeeringConnection
-Properties:
-  PeerVpcId: String
-  Tags:
-    - Resource Tag
-  VpcId: String
-  PeerOwnerId: String
-  PeerRegion: String
-  PeerRoleArn:  String
+Parameters:
+  EnvironmentName:
+    Description: An environment name that will be prefixed to resource names
+    Type: String
+
+  pPeerVPCId:
+    Description: Please enter the target VPC ID
+    Type: String
+    Default: vpc-12345
+
+  pPeerOwnerId:
+    Description: Please enter the source VPC ID
+    Type: String
+    Default: vpc-12345
+
+  pPeerRegion:
+    Description: Please enter the source VPC region
+    Type: String
+    Default: us-east-2
+
+Resources:
+ myVPCPeeringConnection:
+  Type: AWS::EC2::VPCPeeringConnection
+  Properties:
+    PeerVpcId: !Ref pPeerVPCId
+    VpcId: !Ref pVPCId
+    PeerRegion: !Ref pPeerRegion
