@@ -35,6 +35,7 @@ Resources:
           - AWSInstanceType2Arch
           - Ref: InstanceType
           - Arch
+      SubnetId: string
   InstanceSecurityGroup:
     Type: AWS::EC2::SecurityGroup
     Properties:

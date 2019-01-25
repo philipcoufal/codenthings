@@ -1,6 +1,5 @@
 Description:
   Test EC2 creation for workload VPC
-<<<<<<< HEAD
 
 Parameters:
   KeyName:
@@ -46,5 +45,3 @@ Resources:
         ToPort: '22'
         CidrIp:
           Ref: SSHLocation
-=======
->>>>>>> a724d8526394b02b3de4efdeadf8b07d157df1ff
