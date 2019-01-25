@@ -11,7 +11,7 @@ Parameters:
     Type: String
     Default: vpc-12345
 
-  pPeerOwnerId:
+  pVPCId:
     Description: Please enter the source VPC ID
     Type: String
     Default: vpc-12345
