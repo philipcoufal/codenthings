@@ -211,7 +211,7 @@ Resources:
     Properties:
       GroupDescription: Allow HTTP and SSH traffic to our host
       VpcId:
-        Ref: MyVPC
+        Ref: VPC
       SecurityGroupIngress:
       - IpProtocol: tcp
         FromPort: '22'
