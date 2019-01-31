@@ -1,35 +1,40 @@
 Parameters:
   pWLDestinationCidrBlock:
     Description: Please enter the workload VPC CIDR block
-    Type: 10.192.0.0/16
+    Type: String
+    Default: 10.192.0.0/16
 
   pSSDestinationCidrBlock:
     Description: Please enter the workload VPC CIDR block
-    Type: 10.193.0.0/16
+    Type: String
+    Default: 10.193.0.0/16
 
   pWLRouteTableId:
     Description: Please enter the route table ID created with the workload VPC deployment
-    Type: rtb-12345
+    Type: String
+    Default: rtb-12345
 
   pSSRouteTableId:
     Description: Please enter the route table ID created with the shared-services VPC deployment
-    Type: rtb-12345
+    Type: String
+    Default: rtb-12345
 
   pPeeringConnectionId:
     Description: Please enter the VPC peering connection id created with the VPC peering deployment
-    Type: pcx-12345
+    Type: String
+    Default: pcx-12345
 
 Resources:
  myVPCPeeringRouteSS:
   Type: AWS::EC2::Route
   Properties:
-    DestinationCidrBlock: Ref! pWLDestinationCidrBlock
-    RouteTableId: Ref! pSSRouteTableId
-    VpcPeeringConnectionId: Ref! pPeeringConnectionId
+    RouteTableId: !Ref pSSRouteTableId
+    VpcPeeringConnectionId: !Ref pPeeringConnectionId
+    DestinationCidrBlock: !Ref pWLDestinationCidrBlock
 
  myVPCPeeringRouteWL:
   Type: AWS::EC2::Route
   Properties:
-    DestinationCidrBlock: Ref! pSSDestinationCidrBlock
-    RouteTableId: Ref! pSSRouteTableId
-    VpcPeeringConnectionId: Ref! pPeeringConnectionId
+    RouteTableId: !Ref pWLRouteTableId
+    DestinationCidrBlock: !Ref pSSDestinationCidrBlock
+    VpcPeeringConnectionId: !Ref pPeeringConnectionId
